@@ -33,6 +33,8 @@ The algorithm has been coded in C++, parallelization has been done via OpenMP. M
 To run with a specific data set use: ./gpsa --x <sequence1_filename> --y <sequence2_filename>
 By default, the program will look for X.txt and Y.txt. 
 
+For compiling, please use the provided Makefile.
+
 Here are the available sequences: 
 
 1. X.txt, Y.txt, size: [18481x18961] 
