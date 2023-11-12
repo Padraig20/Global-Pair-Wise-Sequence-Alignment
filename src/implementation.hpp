@@ -7,17 +7,15 @@ unsigned long SequenceInfo::gpsa_sequential(float** S, float** SUB, std::unorder
     unsigned long visited = 0;
     gap_penalty = SUB[0][cmap['*']]; // min score
 
-    unsigned long hey = 0;
-
 	// Boundary
     for (int i = 1; i < rows; i++) {
         S[i][0] = i * gap_penalty;
-		hey++;
+		visited++;
 	}
 
     for (int j = 0; j < cols; j++) {
         S[0][j] = j * gap_penalty;
-		hey++;
+		visited++;
 	}
 
 	// Main part
@@ -32,10 +30,7 @@ unsigned long SequenceInfo::gpsa_sequential(float** S, float** SUB, std::unorder
 		}
 	}
 
-	std::cout << hey << "\n";
-	std::cout << visited << "\n";
-
-    return visited + hey;
+    return visited;
 }
 
 unsigned long SequenceInfo::gpsa_parallel(float** S, float** SUB, std::unordered_map<char, int> cmap, int grainsize = 1) {
@@ -59,6 +54,7 @@ unsigned long SequenceInfo::gpsa_parallel(float** S, float** SUB, std::unordered
 		}
     }
 
+	//wavefront algorithm
 	#pragma omp parallel
     {
         #pragma omp single
@@ -82,20 +78,14 @@ unsigned long SequenceInfo::gpsa_parallel(float** S, float** SUB, std::unordered
     }
 
 	std::cout << "Workload partitioning: ";
-
     for (unsigned long counter : thread_counters) {
             std::cout << counter << ' ';
     }
-
     std::cout << std::endl;
 
     for (unsigned long counter : thread_counters) {
         visited += counter;
 	}
-
-	std::cout << "Is:        " << visited << "\n";
-
-    std::cout << "Should be: 350418241\n";
 
     return visited;
 }
